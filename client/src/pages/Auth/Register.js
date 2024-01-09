@@ -16,24 +16,24 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await axios.post("/api/v1/auth/register", {
+        name,
         email,
         password,
         phone,
         address,
-        name,
       });
       console.log(res.data);
       if (res && res.data.success) {
         toast.success(res.data && res.data.message);
         setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+          navigate("/");
+        }, 2000);
       } else {
-        toast.error(res.data.message);
+        toast(res.data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error("something went wrong");
+      toast.error();
     }
   };
   return (
