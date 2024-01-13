@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, phone, address } = req.body;
+    const { name, email, password, phone, address, answer } = req.body;
     if (!name) {
       return res.send({ message: "Name is Required" });
     }
@@ -19,6 +19,9 @@ export const registerController = async (req, res) => {
     }
     if (!address) {
       return res.send({ message: "Address is Required" });
+    }
+    if (!answer) {
+      return res.send({ message: "Answer is Required" });
     }
 
     const existingUser = await userModel.findOne({ email });
@@ -38,6 +41,7 @@ export const registerController = async (req, res) => {
       password: hassedPassword,
       phone,
       address,
+      answer,
     });
 
     user.save();
@@ -102,15 +106,29 @@ export const loginController = async (req, res) => {
 
 export const forgotPasswordController = async (req, res) => {
   try {
+    console.log("first");
+    console.log(req.body);
     const { email, newPassword, answer } = req.body;
-    if (!email || !newPassword || !answer) {
-      return res.send({
+
+    if (!email) {
+      res.status(400).send({ message: "Emai is required" });
+    }
+    if (!answer) {
+      res.status(400).send({ message: "answer is required" });
+    }
+    if (!newPassword) {
+      res.status(400).send({ message: "New Password is required" });
+    }
+    console.log(email, newPassword, answer);
+    const user = await userModel.findOne({ email, answer });
+    if (!user) {
+      res.status(400).send({
         success: false,
-        message: "Email, newPassword and answer is required",
+        message: "wrong Email or answer",
       });
     }
     const hashed = await bcrypt.hash(newPassword, 9);
-    const user = await userModel.findOneAndUpdate(user._id, {
+    await userModel.findByIdAndUpdate(user._id, {
       password: hashed,
     });
     res.status(200).json({
@@ -119,10 +137,11 @@ export const forgotPasswordController = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.send({
+    res.status(500).json({
       success: false,
       message: "Something went wrong",
-      error,
+      error: error.message,
+      stack: error.stack,
     });
   }
 };
