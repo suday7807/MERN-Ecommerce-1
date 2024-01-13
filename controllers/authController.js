@@ -100,6 +100,33 @@ export const loginController = async (req, res) => {
   }
 };
 
+export const forgotPasswordController = async (req, res) => {
+  try {
+    const { email, newPassword, answer } = req.body;
+    if (!email || !newPassword || !answer) {
+      return res.send({
+        success: false,
+        message: "Email, newPassword and answer is required",
+      });
+    }
+    const hashed = await bcrypt.hash(newPassword, 9);
+    const user = await userModel.findOneAndUpdate(user._id, {
+      password: hashed,
+    });
+    res.status(200).json({
+      success: true,
+      message: "Password Reset successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      success: false,
+      message: "Something went wrong",
+      error,
+    });
+  }
+};
+
 export const testController = (req, res) => {
   res.json({ msg: "proceted route" });
 };
