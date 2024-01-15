@@ -5,12 +5,14 @@ import axios from "axios";
 import "../../styles/AuthStyles.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth.js";
+import { useLocation } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -24,7 +26,7 @@ const Login = () => {
         setAuth({ ...auth, user: res.data.user, token: res.data.token });
         localStorage.setItem("auth", JSON.stringify(res.data));
         setTimeout(() => {
-          navigate("/");
+          navigate(location.state || "/");
         }, 2000);
       } else {
         toast.error(res.data.message);
