@@ -5,6 +5,8 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/produts", productRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({
