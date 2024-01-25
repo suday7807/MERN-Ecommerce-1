@@ -1,3 +1,4 @@
+import slugify from "slugify";
 import ProductModel from "../models/ProductModel.js";
 import fs from "fs";
 
@@ -12,8 +13,6 @@ export const createProductController = async (req, res) => {
         res.status(500).send({ error: "Name is Required" });
       case !description:
         res.status(500).send({ error: "Description is Required" });
-      case !slug:
-        res.status(500).send({ error: "slug is Required" });
       case !price:
         res.status(500).send({ error: "Price is Required" });
       case !category:
@@ -39,7 +38,7 @@ export const createProductController = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    resizeBy.status(400).send({
+    res.status(400).send({
       success: false,
       message: "Error while creating Products",
       error,
