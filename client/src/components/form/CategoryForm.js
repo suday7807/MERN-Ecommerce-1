@@ -13,7 +13,7 @@ const CategoryForm = ({ handleSubmit, value, setvalue }) => {
             placeholder="Enter Category"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="mt-2 btn btn-primary">
           Submit
         </button>
       </form>
