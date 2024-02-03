@@ -33,8 +33,8 @@ const CreateCategory = () => {
   const getAllCategories = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
-      if (data.success) {
-        setcategories(data.category);
+      if (data?.success) {
+        setcategories(data?.category);
       }
     } catch (error) {
       console.log(error);
@@ -59,6 +59,22 @@ const CreateCategory = () => {
         setSelected(null);
         setUpdatedName("");
         setVisible(false);
+        getAllCategories();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("something went wrong while updating");
+    }
+  };
+  const handleDelete = async (pid) => {
+    try {
+      const { data } = await axios.delete(
+        `/api/v1/category/delete-category/${pid}`
+      );
+      if (data.success) {
+        toast.success(`category is deleted`);
         getAllCategories();
       } else {
         toast.error(data.message);
@@ -108,7 +124,14 @@ const CreateCategory = () => {
                         >
                           Edit
                         </button>
-                        <button className="btn btn-danger ms-2">Delete</button>
+                        <button
+                          className="btn btn-danger ms-2"
+                          onClick={() => {
+                            handleDelete(e._id);
+                          }}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
