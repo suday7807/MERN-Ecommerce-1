@@ -32,7 +32,7 @@ const UpdateProducts = () => {
       setId(data.singleProduct._id);
       setdescription(data.singleProduct.description);
       setPrice(data.singleProduct.price);
-      setCategory(data.singleProduct.category);
+      setCategory(data.singleProduct.category._id);
       setshipping(data.singleProduct.shipping);
       setQuantity(data.singleProduct.quantity);
       console.log(data);
@@ -76,7 +76,7 @@ const UpdateProducts = () => {
       );
       if (data?.success) {
         toast.success("Product Updated successfully");
-        // navigate("/dashboard/admin/products");
+        navigate("/dashboard/admin/products");
       } else {
         toast.error(data?.message);
       }
@@ -86,6 +86,23 @@ const UpdateProducts = () => {
     }
   };
 
+  const handleDelete = async (event) => {
+    event.preventDefault();
+    try {
+      let answer = window.prompt(
+        "Are you Sure you want to delete this product"
+      );
+      if (!answer) return;
+      const { data } = await axios.delete(
+        `/api/v1/produts/delete-product/${id}`
+      );
+      toast.success("product is successfully deleted");
+      navigate("/dashboard/admin/products");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong while deleting product");
+    }
+  };
   return (
     <Layout>
       <div className="container-fluid m-3 p-3">
@@ -206,6 +223,11 @@ const UpdateProducts = () => {
                   UPDATE PRODUCT
                 </button>
               </div>
+              <div className="mb-3">
+                <button className="btn btn-danger " onClick={handleDelete}>
+                  DELETE PRODUCT
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -213,5 +235,4 @@ const UpdateProducts = () => {
     </Layout>
   );
 };
-
 export default UpdateProducts;
